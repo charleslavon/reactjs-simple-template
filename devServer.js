@@ -1,30 +1,38 @@
+import browserSync from 'browser-sync';
+import historyApiFallback from 'connect-history-api-fallback';
 import webpack from 'webpack';
-import path from 'path';
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import config from './webpack.config';
-import Express from 'express';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import config from './webpack.config.dev';
 
-const app = new Express();
-const port = 3000;
 const compiler = webpack(config);
 
 
-app.use(webpackDevMiddleware(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath,
-}));
+browserSync({
+  port: 8080,
+  ui: {
+    port: 8081
+  },
+  server: {
+    baseDir: 'dist',
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+    middleware: [
+      historyApiFallback(),
 
-app.listen(port, error => {
-  /* eslint-disable no-console */
-  if (error) {
-    console.error(error);
-  } else {
-    console.info('Listening @ http://localhost:%s/ ', port
-    );
-  }
-  /* eslint-enable no-console */
+      webpackDevMiddleware(compiler, {
+        publicPath: config.output.publicPath,
+        stats: { colors: true },
+        noInfo: true
+      }),
+
+      // bundler should be the same as above
+      webpackHotMiddleware(compiler)
+    ]
+  },
+
+  // no need to watch '*.js' here, webpack will take care of it for us,
+  // including full page reloads if HMR won't work
+  files: [
+    'src/index.html'
+  ]
 });

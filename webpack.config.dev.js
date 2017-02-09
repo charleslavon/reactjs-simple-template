@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 export default {
   devtool: 'eval',
@@ -11,10 +11,18 @@ export default {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/static/',
+    publicPath: '/',
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+     new webpack.HotModuleReplacementPlugin(),
+     new HtmlWebpackPlugin({ // Create HTML file that includes references to bundled CSS and JS.
+            template: 'src/index.html',
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true
+            },
+            inject: true
+        })
   ],
   module: {
         loaders: [
@@ -29,4 +37,8 @@ export default {
             { test: /(\.css|\.scss)$/, loaders: ["style-loader", "css-loader", "sass-loader"] }
         ]
     },
+    devServer: {
+        historyApiFallback: true,
+        contentBase: './src'
+    }
 };

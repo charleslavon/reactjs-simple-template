@@ -1,4 +1,4 @@
-This lighweight boilerplate app is intendended to provide minimal bloat with explicit configs that are easily extendable.
+This lightweight boilerplate app is intendended to provide minimal bloat with explicit configs that are easily extendable.
 
 ##### Clone the project
 1. create a directory for your new app, mkdir my-new-app & cd my-new-app
@@ -23,10 +23,4 @@ $ npm install
 $ npm start
 ```
 - The application should automatically start running on your default browser on this url: http://localhost:3000/
-
-To run only tests
-```sh
-$ npm test
-```
-
 
